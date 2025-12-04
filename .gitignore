@@ -41,3 +41,20 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.brf
+*.nav
+*.snm
+*.vrb
