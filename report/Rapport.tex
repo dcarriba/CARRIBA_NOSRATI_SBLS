@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{hyperref}
 
 
 \title{Spatially Balanced Latin Square (SBLS)}
@@ -27,7 +28,7 @@
     \vspace{1cm}
     {\Large \bfseries Modélisation et résolution du problème SBLS\\avec la Programmation par Contraintes\par}
     \vfill
-    {\includegraphics[width=0.8\textwidth]{img/ds4h.png} \par}
+    {\includegraphics[width=0.4\textwidth]{img/unice.png} \par}
     \vfill
     {\Large Daniel \sc Carriba Nosrati \par}
     \vspace{0.5cm}
@@ -44,6 +45,33 @@
 
 
 \section{Introduction}
+
+\par Ce projet a pour but de modéliser le problème SBLS avec la Programmation par Contraintes, et d'essayer de le résoudre pour le plus grand \( n \) possible.
+
+\subsection{Présentation du problème SBLS}
+
+\par Le problème SBLS (Spatially Balanced Latin Square), en français "Carré Latin Spatialement Équilibré", est un problème où on dispose d'un carré de taille \( n \times n \) (pour un \( n \) donné) et qui possède les mêmes contraintes que la problème du Carré Latin, soit pour chaque ligne et colonne il y a exactement une seule occurence de \( i \) \( \forall i \in [0 \dots n-1] \), autrement dit tout les éléments sont tous différents un à un au sein d'une ligne et colonne, pour toute ligne et colonne du carré \( n \times n \).
+\par Le problème SBLS (ou Carré Latin Spatialement Équilibré) possède une contrainte supplémentaire comparé au problème du Carré Latin. Cette contrainte supplémentaire contraint que la somme des distances entre chaque paire de nombres \( i \) et \( j \) est égale, \( \forall i \in [0 \dots n-1] \), \( \forall j \in [0 \dots n-1] \).
+
+\subsection{Présentation du projet}
+
+\par Dans ce projet, le problème SBLS à été modélisé avec la Programmation par Contraintes grâce à la librairie Java \href{https://choco-solver.org/}{Choco-solver}. Plusieurs méthodes de résolution différentes ont étés implémentées, qui seront comparé à une méthode dite "simple".
+\par Dans ce rapport on présentera la méthode dite "simple" ainsi que les autres méthodes de résolution qui ont étés implémentées dans notre programme. De plus on présentera pour tout \( n \) les différentes statistiques de résolution des différentes méthodes implémentées, comme le temps de résolution ou le nombre de noeuds utilisés.
+
+\subsection{Matériel utilisé}
+
+\par Les statistiques calculées par notre programme et présentées dans ce rapport ont été réalisées sur la machine suivante :
+
+\begin{itemize}
+\item Apple MacBook Pro (14 pouces, 2021)
+\item CPU : Apple M1 Pro, 8 c\oe urs CPU (dont 6 hautes performances et 2 à haute efficacité énergétique)
+\item GPU : Apple M1 Pro, 14 c\oe urs GPU
+\item RAM : 16 Go de mémoire unifiée
+\item \href{https://support.apple.com/fr-fr/111902}{Lien pour plus de détails}
+\end{itemize}
+
+
+
 
 
 \end{document}
