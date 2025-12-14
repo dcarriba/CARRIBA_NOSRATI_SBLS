@@ -50,8 +50,8 @@
 
 \subsection{Présentation du problème SBLS}
 
-\par Le problème SBLS (Spatially Balanced Latin Square), en français "Carré Latin Spatialement Équilibré", est un problème où on dispose d'un carré de taille \( n \times n \) (pour un \( n \) donné) et qui possède les mêmes contraintes que le problème du Carré Latin, soit pour chaque ligne et colonne il y a exactement une seule occurence de \( i \) \( \forall i \in [0 \dots n-1] \), autrement dit tout les éléments sont tous différents un à un au sein d'une ligne et colonne, pour toute ligne et colonne du carré \( n \times n \).
-\par Le problème SBLS (ou Carré Latin Spatialement Équilibré) possède une contrainte supplémentaire comparé au problème du Carré Latin. Cette contrainte supplémentaire contraint que la somme des distances entre chaque paire de nombres \( i \) et \( j \) est égale, \( \forall i \in [0 \dots n-1] \), \( \forall j \in [0 \dots n-1] \).
+\par Le problème SBLS (Spatially Balanced Latin Square), en français "Carré Latin Spatialement Équilibré", est un problème où on dispose d'un carré de taille \( n \times n \) (pour un \( n \) donné) et qui possède les mêmes contraintes que le problème du Carré Latin, soit pour chaque ligne et colonne il y a exactement une seule occurence de \( i \) \( \forall i \in [0, n-1] \), autrement dit tout les éléments sont tous différents un à un au sein d'une ligne et colonne, pour toute ligne et colonne du carré \( n \times n \).
+\par Le problème SBLS (ou Carré Latin Spatialement Équilibré) possède une contrainte supplémentaire comparé au problème du Carré Latin. Cette contrainte supplémentaire contraint que la somme des distances entre chaque paire de nombres \( i \) et \( j \) est égale, \( \forall i \in [0, n-1] \), \( \forall j \in [0, n-1] \).
 
 \subsection{Présentation du projet}
 
@@ -85,27 +85,48 @@ Les variables de notre problème seront représentés par \( Variables \) de typ
 
 \par \(Variables\) est définit mathématiquement de la manière suivante :
 \[
-Variables = \{ v_{i, elt}, \forall i \in [0 \dots n-1], \forall elt \in [0 \dots n-1] \}
+Variables = \{ v_{i, elt}, \forall i \in [0, n-1], \forall elt \in [0, n-1] \}
 \]
-où \( v_{i, elt} \) représente la position de l'élément \( elt \in [0 \dots n-1] \) au sein de la ligne \( i \in [0 \dots n-1] \) du carré \( n \times n \).
+où \( v_{i, elt} \) représente la position de l'élément \( elt \in [0, n-1] \) au sein de la ligne \( i \in [0, n-1] \) du carré \( n \times n \).
+\par Dans notre programme \( Variables \) est définit de la manière suivante :
+\begin{verbatim}
+private IntVar[][] variables;
+variables = model.intVarMatrix(n, n, 0, n-1);
+\end{verbatim}
+
 
 \subsection{Domaines}
 
 \par Les domaines des variables est définit mathématiquement de la manière suivante:
 \[
-Domaines = \{ D_{i, elt}, \forall i \in [0 \dots n-1], \forall elt \in [0 \dots n-1] \}
+Domaines = \{ D_{i, elt}, \forall i \in [0, n-1], \forall elt \in [0, n-1] \}
 \]
 avec
 \[
-D_{i, elt} = \{0, \dots, n-1\}, \forall i \in [0 \dots n-1], \forall elt \in [0 \dots n-1]
+D_{i, elt} = \{0, \dots , n-1\}, \forall i \in [0, n-1], \forall elt \in [0, n-1]
 \]
-où \( D_{i, elt} \) est le domaine de la variable \( v_{i, elt} \), \( \forall i \in [0 \dots n-1], \forall elt \in [0 \dots n-1] \)
+où \( D_{i, elt} \) est le domaine de la variable \( v_{i, elt} \), \( \forall i \in [0, n-1], \forall elt \in [0, n-1] \)
 \\ 
-\par Cela signifie que tout élément \( elt \in [0 \dots n-1] \) peut prendre pour position entre \(0\) et \(n-1\) au sein de chaque ligne \( i \in [0 \dots n-1] \) du carré \( n \times n \).
+\par Cela signifie que tout élément \( elt \in [0, n-1] \) peut prendre pour position entre \(0\) et \(n-1\) au sein de chaque ligne \( i \in [0, n-1] \) du carré \( n \times n \).
 
 \subsection{Contraintes}
 
 \subsubsection{Contrainte sur les lignes}
+
+\par La première contrainte du problème SBLS proscrit que il y a exactement une seule occurence de chaque élément \( elt \) au sein d'une ligne \( i \) du carré \(n \times n \) \( \forall i \in [0, n-1] \).
+\par Dans notre modélisation, comme la variable \(v_{i, elt}\) représente la position de l'élément \( elt \) au sein de la ligne i \( \forall v_{i, elt} \in Variables \), alors chaque ligne est déjà implicitement contraint de contenir tout élément un seule fois. En effet un élément \( elt \) ne peut être à deux positions différentes, comme tout \(v_{i, elt} \in Variables \) ne peut que prendre une seule valeur parmi son domaine \( D_{i, elt} = \{0, \dots , n-1\} \).
+\par Cependant il est nécéssaire de contraindre notre modèle tel que deux éléments \( elt \) distincts ne peuvent être à la même position, comme toute case du carré \( n \times n \) ne peut contenir que un seul élément.
+\par Mathématiquement cette contrainte est définit de la manière suivante :
+\[
+\forall i \in [0, n-1], v_{i, 0} \neq v_{i, 1} \neq \dots \neq v_{i, n-1}
+\]
+ce qui signifie que pour toute ligne \( i \) du carré \( n \times n \) tout \( elt \in [0, n-1] \) à une position différente.
+\par Dans notre programme cette contrainte à été implémentée de la manière suivante :
+\begin{verbatim}
+for (int i = 0; i < n; i++) {
+    model.allDifferent(variables[i]).post();
+}
+\end{verbatim}
 
 \subsubsection{Contrainte sur les colonnes}
 
