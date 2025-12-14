@@ -42,6 +42,7 @@ public class SpatiallyBalancedLatinSquare {
         postLineAllDiffConstraint();
         postColumnAllDiffConstraint();
         solver = model.getSolver();
+        System.out.println(model.getName() + " problem has been instantiated.\n");
     }
 
     /**
@@ -72,9 +73,10 @@ public class SpatiallyBalancedLatinSquare {
      * Attempts to find a solution of the problem and prints the resolution statistics
      */
     public void solveProblem() {
+        System.out.println("solving problem...\n");
         Solution solution = solver.findSolution();
         if (solution != null) {
-            System.out.println("Solution of " + model.getName() + " found.");
+            System.out.println("Solution found.\n");
             if (printSolution) {
                 System.out.println("Solution:");
                 for (int i = 0; i < n; i++) {
@@ -83,9 +85,10 @@ public class SpatiallyBalancedLatinSquare {
                     }
                     System.out.println();
                 }
+                System.out.println();
             }
         } else {
-            System.out.println("No solution of " + model.getName());
+            System.out.println("No solution found\n");
         }
         System.out.println("Resolution Statistics:");
         solver.printStatistics();

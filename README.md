@@ -45,15 +45,21 @@ To build the project, use the following command:
 
 ### Run the project
 
-
+To run the project, i.e. to solve the SBLS problem for n, use the following command:
 
 ```bash
-./gradlew run
+./gradlew run --args='-n <N> -printSolution <BOOLEAN>'
+```
+
+with `<N>` the wanted value for n and `<BOOLEAN>` the boolean value whether the solution should be printed or not.
+
+Example with n equals 6 and where the solution should be printed:
+
+```bash
+./gradlew run --args='-n 6 -printSolution true'
 ```
 
 ### Run unit tests
-
-
 
 ```bash
 ./gradlew test
