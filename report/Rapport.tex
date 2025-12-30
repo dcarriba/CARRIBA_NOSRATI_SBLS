@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[colorlinks=false]{hyperref}
-%\usepackage[a4paper, margin=3cm]{geometry}
+\usepackage[a4paper]{geometry}
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{xcolor}
@@ -46,21 +46,23 @@
 
 \section{Introduction}
 
-\par Ce projet a pour but de modéliser le problème SBLS avec la Programmation par Contraintes, et d'essayer de le résoudre pour le plus grand \( n \) possible.
+Ce projet a pour but de modéliser le problème SBLS avec la Programmation par Contraintes, et d'essayer de le résoudre pour le plus grand \( n \) possible. \par
 
 \subsection{Présentation du problème SBLS}
 
-\par Le problème SBLS (Spatially Balanced Latin Square), en français "Carré Latin Spatialement Équilibré", est un problème où on dispose d'un carré de taille \( n \times n \) (pour un \( n \) donné) et qui possède les mêmes contraintes que le problème du Carré Latin, soit pour chaque ligne et colonne il y a exactement une seule occurence de \( i \) \( \forall i \in [0, n-1] \), autrement dit tout les éléments sont tous différents un à un au sein d'une ligne et colonne, pour toute ligne et colonne du carré \( n \times n \).
-\par Le problème SBLS (ou Carré Latin Spatialement Équilibré) possède une contrainte supplémentaire comparé au problème du Carré Latin. Cette contrainte supplémentaire contraint que la somme des distances entre chaque paire de nombres \( i \) et \( j \) est égale, \( \forall i \in [0, n-1] \), \( \forall j \in [0, n-1] \).
+Le problème SBLS (Spatially Balanced Latin Square), en français "Carré Latin Spatialement Équilibré", est un problème où on dispose d'un carré de taille \( n \times n \) (pour un \( n \) donné) et qui possède les mêmes contraintes que le problème du Carré Latin, soit pour chaque ligne et colonne il y a exactement une seule occurence de \( i \) \( \forall i \in [0, n-1] \), autrement dit tout les éléments sont tous différents un à un au sein d'une ligne et colonne, pour toute ligne et colonne du carré \( n \times n \). \par
+
+Le problème SBLS (ou Carré Latin Spatialement Équilibré) possède une contrainte supplémentaire comparé au problème du Carré Latin. Cette contrainte supplémentaire contraint que la somme des distances entre chaque paire de nombres \( i \) et \( j \) est égale, \( \forall i \in [0, n-1] \), \( \forall j \in [0, n-1] \).
 
 \subsection{Présentation du projet}
 
-\par Dans ce projet, le problème SBLS à été modélisé avec la Programmation par Contraintes grâce à la librairie Java \href{https://choco-solver.org/}{Choco-solver}. Plusieurs méthodes de résolution différentes ont étés implémentées, qui seront comparé à une méthode dite "simple".
-\par Dans ce rapport on présentera la méthode dite "simple" ainsi que les autres méthodes de résolution qui ont étés implémentées dans notre programme. De plus on présentera pour tout \( n \) les différentes statistiques de résolution des différentes méthodes implémentées, comme le temps de résolution ou encore le nombre de noeuds utilisés.
+Dans ce projet, le problème SBLS à été modélisé avec la Programmation par Contraintes grâce à la librairie Java \href{https://choco-solver.org/}{Choco-solver}. Plusieurs méthodes de résolution différentes ont étés implémentées, qui seront comparé à une méthode dite "simple". \par
+
+Dans ce rapport on présentera la méthode dite "simple" ainsi que les autres méthodes de résolution qui ont étés implémentées dans notre programme. De plus on présentera pour tout \( n \) les différentes statistiques de résolution des différentes méthodes implémentées, comme le temps de résolution ou encore le nombre de noeuds utilisés. \par
 
 \subsection{Matériel utilisé}
 
-\par Les statistiques calculées par notre programme et présentées dans ce rapport ont été réalisées sur la machine suivante :
+Les statistiques calculées par notre programme et présentées dans ce rapport ont été réalisées sur la machine suivante :
 
 \begin{itemize}
 \item \href{https://support.apple.com/fr-fr/111902}{Apple MacBook Pro (14 pouces, 2021)}
@@ -70,25 +72,28 @@
 \item OS : macOS Sequoia 15.7.1
 \end{itemize}
 
-\par \href{https://www.oracle.com/fr/java/technologies/downloads/#java21}{Java version 21.0.8 distribué par Oracle} ainsi que \href{https://github.com/chocoteam/choco-solver/releases/tag/v4.10.14}{Choco-solver version 4.10.14} ont été utilisés.
+\par 
+
+\href{https://www.oracle.com/fr/java/technologies/downloads/#java21}{Java version 21.0.8 distribué par Oracle} ainsi que \href{https://github.com/chocoteam/choco-solver/releases/tag/v4.10.14}{Choco-solver version 4.10.14} ont été utilisés. \par
 
 \clearpage
 
 
 \section{Modélisation}
 
-\par Pour pouvoir implémenter et résoudre le problème SBLS avec Choco-solver, on a choisit de modéliser le problème SBLS avec les variables, les domaines et les contraintes suivantes.
+Pour pouvoir implémenter et résoudre le problème SBLS avec Choco-solver, on a choisit de modéliser le problème SBLS avec les variables, les domaines et les contraintes suivantes. \par
 
 \subsection{Variables}
 
-Les variables de notre problème seront représentés par \( Variables \) de type \verb|IntVar[][]|, soit une matrice d'éléments de type \verb|IntVar|.
+Les variables de notre problème seront représentés par \( Variables \) de type \verb|IntVar[][]|, soit une matrice d'éléments de type \verb|IntVar|. \par
 
-\par \(Variables\) est définit mathématiquement de la manière suivante :
+\(Variables\) est définit mathématiquement de la manière suivante :
 \[
 Variables = \{ v_{i, elt}, \forall i \in [0, n-1], \forall elt \in [0, n-1] \}
 \]
-où \( v_{i, elt} \) représente la position de l'élément \( elt \in [0, n-1] \) au sein de la ligne \( i \in [0, n-1] \) du carré \( n \times n \).
-\par Dans notre programme \( Variables \) est définit de la manière suivante :
+où \( v_{i, elt} \) représente la position de l'élément \( elt \in [0, n-1] \) au sein de la ligne \( i \in [0, n-1] \) du carré \( n \times n \). \par
+
+Dans notre programme \( Variables \) est définit de la manière suivante :
 \begin{verbatim}
 private IntVar[][] variables;
 variables = model.intVarMatrix(n, n, 0, n-1);
@@ -97,7 +102,7 @@ variables = model.intVarMatrix(n, n, 0, n-1);
 
 \subsection{Domaines}
 
-\par Les domaines des variables est définit mathématiquement de la manière suivante:
+Les domaines des variables est définit mathématiquement de la manière suivante:
 \[
 Domaines = \{ D_{i, elt}, \forall i \in [0, n-1], \forall elt \in [0, n-1] \}
 \]
@@ -106,27 +111,33 @@ avec
 D_{i, elt} = \{0, \dots , n-1\}, \forall i \in [0, n-1], \forall elt \in [0, n-1]
 \]
 où \( D_{i, elt} \) est le domaine de la variable \( v_{i, elt} \), \( \forall i \in [0, n-1], \forall elt \in [0, n-1] \)
-\\ 
-\par Cela signifie que tout élément \( elt \in [0, n-1] \) peut prendre pour position entre \(0\) et \(n-1\) au sein de chaque ligne \( i \in [0, n-1] \) du carré \( n \times n \).
+\\ \par
+
+Cela signifie que tout élément \( elt \in [0, n-1] \) peut prendre pour position entre \(0\) et \(n-1\) au sein de chaque ligne \( i \in [0, n-1] \) du carré \( n \times n \). \par
 
 \subsection{Contraintes}
 
 \subsubsection{Contrainte sur les lignes}
 
-\par La première contrainte du problème SBLS proscrit que il y a exactement une seule occurence de chaque élément \( elt \) au sein d'une ligne \( i \) du carré \(n \times n \) \( \forall i \in [0, n-1] \).
-\par Dans notre modélisation, comme la variable \(v_{i, elt}\) représente la position de l'élément \( elt \) au sein de la ligne i \( \forall v_{i, elt} \in Variables \), alors chaque ligne est déjà implicitement contraint de contenir tout élément un seule fois. En effet un élément \( elt \) ne peut être à deux positions différentes, comme tout \(v_{i, elt} \in Variables \) ne peut que prendre une seule valeur parmi son domaine \( D_{i, elt} = \{0, \dots , n-1\} \).
-\par Cependant il est nécéssaire de contraindre notre modèle tel que deux éléments \( elt \) distincts ne peuvent être à la même position, comme toute case du carré \( n \times n \) ne peut contenir que un seul élément.
-\par Mathématiquement cette contrainte est définit de la manière suivante :
+La première contrainte du problème SBLS proscrit que il y a exactement une seule occurence de chaque élément \( elt \) au sein d'une ligne \( i \) du carré \(n \times n \) \( \forall i \in [0, n-1] \). \par
+
+Dans notre modélisation, comme la variable \(v_{i, elt}\) représente la position de l'élément \( elt \) au sein de la ligne \( i \) \( \forall v_{i, elt} \in Variables \), alors chaque ligne est déjà implicitement contraint de contenir tout élément un seule fois. En effet un élément \( elt \) ne peut être à deux positions différentes, comme tout \(v_{i, elt} \in Variables \) ne peut que prendre une seule valeur parmi son domaine \( D_{i, elt} = \{0, \dots , n-1\} \). \par
+
+Cependant il est nécéssaire de contraindre notre modèle tel que deux éléments \( elt \) distincts ne peuvent être à la même position, comme toute case du carré \( n \times n \) ne peut contenir que un seul élément. \par
+
+Mathématiquement cette contrainte est définit de la manière suivante :
 \[
 \forall i \in [0, n-1], v_{i, 0} \neq v_{i, 1} \neq \dots \neq v_{i, n-1}
 \]
-ce qui signifie que pour toute ligne \( i \) du carré \( n \times n \) tout \( elt \in [0, n-1] \) à une position différente.
-\par Dans notre programme cette contrainte à été implémentée de la manière suivante :
+ce qui signifie que pour toute ligne \( i \) du carré \( n \times n \) tout \( elt \in [0, n-1] \) à une position différente. \par
+
+Dans notre programme cette contrainte à été implémentée de la manière suivante :
 \begin{verbatim}
 for (int i = 0; i < n; i++) {
     model.allDifferent(variables[i]).post();
 }
 \end{verbatim}
+\par
 
 \subsubsection{Contrainte sur les colonnes}
 
