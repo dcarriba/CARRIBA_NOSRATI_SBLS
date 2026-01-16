@@ -40,14 +40,11 @@ public class Main {
      * @return value for n
      */
     private static int getArgumentN(String[] args) {
-        int n = 0;
-
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-n")) {
                 if (i + 1 < args.length) {
                     try {
-                        n = Integer.parseInt(args[i + 1]);
-                        return n;
+                        return Integer.parseInt(args[i + 1]);
                     } catch (NumberFormatException e) {
                         throw new IllegalArgumentException("Invalid value for n. Please provide an integer.");
                     }
@@ -57,7 +54,7 @@ public class Main {
             }
         }
 
-        return n;
+        return 0;
     }
 
     /**
