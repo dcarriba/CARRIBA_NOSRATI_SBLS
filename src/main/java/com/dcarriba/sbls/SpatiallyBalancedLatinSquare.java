@@ -18,9 +18,9 @@ public class SpatiallyBalancedLatinSquare {
     private Model model;
     /**
      * Variables of the problem <p>
-     * Forall i and elt in [0, n-1], variables[i][elt] is the position the element elt has on the i-th line of the
-     * n*n square <p>
-     * The domain forall variables[i][elt] is {0, ..., n-1}
+     * Forall i and j in [0, n-1], variables[i][j] is the value of the cell on the i-th row and j-th column of the n*n
+     * square <p>
+     * The domain forall variables[i][j] is {0, ..., n-1}
      */
     private IntVar[][] variables;
     /** {@link Solver} of the {@link Model} of the problem */
@@ -55,7 +55,7 @@ public class SpatiallyBalancedLatinSquare {
 
     /**
      * Posts the following constraint to the model : <p>
-     * each position in {0, ..., n-1} can only be taken by one element elt for each line i
+     * for all lines, all values inside a line must be different from another
      */
     private void postLineAllDiffConstraint() {
         for (int i = 0; i < n; i++) {
@@ -65,20 +65,17 @@ public class SpatiallyBalancedLatinSquare {
 
     /**
      * Posts the following constraint to the model : <p>
-     * each element elt must be occurring exactly once in each column
+     * for all columns, all values inside a column must be different from another
      */
     private void postColumnAllDiffConstraint() {
-        for (int elt = 0; elt < n; elt++) {
-            // allEltPositions contains all positions elt has inside all lines
-            IntVar[] allEltPositions = new IntVar[n];
+        for (int j = 0; j < n; j++) {
+            IntVar[] column = new IntVar[n];
 
             for (int i = 0; i < n; i++) {
-                allEltPositions[i] = variables[i][elt];
+                column[i] = variables[i][j];
             }
 
-            // the element elt occurs exactly once in each column if all positions elt has inside all lines are
-            // different from another
-            model.allDifferent(allEltPositions).post();
+            model.allDifferent(column).post();
         }
     }
 
@@ -106,19 +103,11 @@ public class SpatiallyBalancedLatinSquare {
      * Prints the found solution
      */
     private void printSolution() {
-        int[][] square = new int[n][n];
-
-        for (int i = 0; i < n; i++) {
-            for (int elt = 0; elt < n; elt++) {
-                square[i][variables[i][elt].getValue()] = elt;
-            }
-        }
-
         System.out.println("Solution:");
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                System.out.print(square[i][j] + " ");
+                System.out.print(variables[i][j].getValue() + " ");
             }
             System.out.println();
         }

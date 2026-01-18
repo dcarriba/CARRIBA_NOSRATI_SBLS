@@ -89,9 +89,9 @@ Les variables de notre problème seront représentés par \( Variables \) de typ
 
 \(Variables\) est définit mathématiquement de la manière suivante :
 \[
-Variables = \{ v_{i, elt}, \forall i \in [0, n-1], \forall elt \in [0, n-1] \}
+Variables = \{ v_{i, j}, \forall i \in [0, n-1], \forall j \in [0, n-1] \}
 \]
-où \( v_{i, elt} \) représente la position de l'élément \( elt \in [0, n-1] \) au sein de la ligne \( i \in [0, n-1] \) du carré \( n \times n \).
+où \( v_{i, j} \) représente la valeur au sein de la cellule \( (i, j) \), i.e. la cellule de la ligne \( i \in [0, n-1] \) et de la colonne \( j \in [0, n-1] \) du carré \( n \times n \).
 
 Dans notre programme \( Variables \) est définit de la manière suivante :
 \begin{verbatim}
@@ -104,20 +104,22 @@ variables = model.intVarMatrix(n, n, 0, n-1);
 
 Les domaines des variables est définit mathématiquement de la manière suivante:
 \[
-Domaines = \{ D_{i, elt}, \forall i \in [0, n-1], \forall elt \in [0, n-1] \}
+Domaines = \{ D_{i, j}, \forall i \in [0, n-1], \forall j \in [0, n-1] \}
 \]
 avec
 \[
-D_{i, elt} = \{0, \dots , n-1\}, \forall i \in [0, n-1], \forall elt \in [0, n-1]
+D_{i, j} = \{0, \dots , n-1\}, \forall i \in [0, n-1], \forall j \in [0, n-1]
 \]
-où \( D_{i, elt} \) est le domaine de la variable \( v_{i, elt} \), \( \forall i \in [0, n-1], \forall elt \in [0, n-1] \)
+où \( D_{i, j} \) est le domaine de la variable \( v_{i, j} \), \( \forall i \in [0, n-1], \forall elt \in [0, n-1] \)
 \\ \par
 
-Cela signifie que tout élément \( elt \in [0, n-1] \) peut prendre pour position entre \(0\) et \(n-1\) au sein de chaque ligne \( i \in [0, n-1] \) du carré \( n \times n \).
+Cela signifie que toute cellule \( (i, j) \) du carré \( n \times n \) peut prendre pour valeur entre \(0\) et \(n-1\).
 
 \subsection{Contraintes}
 
 \subsubsection{Contrainte sur les lignes}
+
+TODO: réécrire la suite \\ \\
 
 La première contrainte du problème SBLS proscrit que il y a exactement une seule occurence de chaque élément \( elt \) au sein d'une ligne \( i \) du carré \(n \times n \) \( \forall i \in [0, n-1] \).
 
