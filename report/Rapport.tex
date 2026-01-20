@@ -50,7 +50,7 @@ Ce projet a pour but de modéliser le problème SBLS avec la Programmation par C
 
 \subsection{Présentation du problème SBLS}
 
-Le problème SBLS (Spatially Balanced Latin Square), en français "Carré Latin Spatialement Équilibré", est un problème où on dispose d'un carré de taille \( n \times n \) (pour un \( n \) donné) et qui possède les mêmes contraintes que le problème du Carré Latin, soit pour chaque ligne et colonne il y a exactement une seule occurence de \( i \) \( \forall i \in [0, n-1] \), autrement dit tout les éléments sont tous différents un à un au sein d'une ligne et colonne, pour toute ligne et colonne du carré \( n \times n \).
+Le problème SBLS (Spatially Balanced Latin Square), en français "Carré Latin Spatialement Équilibré", est un problème où on dispose d'un carré de taille \( n \times n \) (pour un \( n \) donné) et qui possède les mêmes contraintes que le problème du Carré Latin, soit pour chaque ligne et colonne il y a exactement une seule occurence de \( i \) \( \forall i \in [0, n-1] \), autrement dit tout les éléments sont tous différents un à un au sein d'une ligne et d'une colonne, pour toute ligne et colonne du carré \( n \times n \).
 
 Le problème SBLS (ou Carré Latin Spatialement Équilibré) possède une contrainte supplémentaire comparé au problème du Carré Latin. Cette contrainte supplémentaire contraint que la somme des distances entre chaque paire de nombres \( i \) et \( j \) est égale, \( \forall i \in [0, n-1] \), \( \forall j \in [0, n-1] \).
 
@@ -119,19 +119,16 @@ Cela signifie que toute cellule \( (i, j) \) du carré \( n \times n \) peut pre
 
 \subsubsection{Contrainte sur les lignes}
 
-TODO: réécrire la suite \\ \\
-
 La première contrainte du problème SBLS proscrit que il y a exactement une seule occurence de chaque élément \( elt \) au sein d'une ligne \( i \) du carré \(n \times n \) \( \forall i \in [0, n-1] \).
 
-Dans notre modélisation, comme la variable \(v_{i, elt}\) représente la position de l'élément \( elt \) au sein de la ligne \( i \) \( \forall v_{i, elt} \in Variables \), alors chaque ligne est déjà implicitement contraint de contenir tout élément un seule fois. En effet un élément \( elt \) ne peut être à deux positions différentes, comme tout \(v_{i, elt} \in Variables \) ne peut que prendre une seule valeur parmi son domaine \( D_{i, elt} = \{0, \dots , n-1\} \).
+Dans notre modélisation, la variable \(v_{i, j}\) représente la valeur de la cellule \( (i, j) \) du carré \( n \times n \).
 
-Cependant il est nécéssaire de contraindre notre modèle tel que deux éléments \( elt \) distincts ne peuvent être à la même position, comme toute case du carré \( n \times n \) ne peut contenir que un seul élément.
+Ainsi, cette première contrainte est mathématiquement défini de la manière suivante :
 
-Mathématiquement cette contrainte est définit de la manière suivante :
 \[
 \forall i \in [0, n-1], v_{i, 0} \neq v_{i, 1} \neq \dots \neq v_{i, n-1}
 \]
-ce qui signifie que pour toute ligne \( i \) du carré \( n \times n \) tout \( elt \in [0, n-1] \) à une position différente.
+ce qui signifie que pour toute ligne \( i \) du carré \( n \times n \) tout \( elt \in [0, n-1] \) est à une position différente.
 
 Dans notre programme cette contrainte à été implémentée de la manière suivante :
 \begin{verbatim}
