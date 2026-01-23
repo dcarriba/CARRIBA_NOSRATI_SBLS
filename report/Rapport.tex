@@ -7,6 +7,8 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{hyperref}
+\usepackage{amsmath}
+
 
 
 \title{Spatially Balanced Latin Square (SBLS)}
@@ -139,6 +141,106 @@ for (int i = 0; i < n; i++) {
 
 \subsubsection{Contrainte sur les colonnes}
 
+La seconde contrainte du problème SBLS proscrit que il y a exactement une seule occurence de chaque élément \( elt \) au sein d'une colonne \( j \) du carré \(n \times n \) \( \forall j \in [0, n-1] \).
+
+Dans notre modélisation, la variable \(v_{i, j}\) représente la valeur de la cellule \( (i, j) \) du carré \( n \times n \).
+
+Ainsi, cette seconde contrainte est mathématiquement défini de la manière suivante :
+
+\[
+\forall j \in [0, n-1], v_{0, j} \neq v_{1, j} \neq \dots \neq v_{n-1, j}
+\]
+ce qui signifie que pour toute colonne \( j \) du carré \( n \times n \) tout \( elt \in [0, n-1] \) est à une position différente.
+
+Dans notre programme cette contrainte à été implémentée de la manière suivante :
+\begin{verbatim}
+for (int j = 0; j < n; j++) {
+    IntVar[] column = new IntVar[n];
+
+    for (int i = 0; i < n; i++) {
+        column[i] = variables[i][j];
+    }
+
+    model.allDifferent(column).post();
+}
+\end{verbatim}
+
 \subsubsection{Contrainte sur l'équilibre spatiale}
+
+La troisième et dernière contrainte du problème SBLS est la contrainte sur l'équilibre spatiale. Pour respecter cette contrainte il faut que toutes les sommes des distances entre deux éléments \( elt1 \) et \( elt2 \) soit égales, pour tout couple d'éléments \( (elt1, elt2) \) \( \forall elt1 \in [0, n-1], \forall elt2 \in [0, n-1 \).
+
+Ainsi, cette contrainte est mathématiquement défini de la manière suivante :
+
+\begin{align*}
+EnsembleSommes &= \left\{
+\forall elt1 \in [0, n-1], \forall elt2 \in [0, n-1], \sum_{i = 0}^{n-1} \left( distance(elt1, elt2) \text{ au sein de la ligne } i \right)
+\right\} \\
+&\bigcup 
+\left\{
+\forall elt1 \in [0, n-1], \forall elt2 \in [0, n-1], \sum_{j = 0}^{n-1} \left( distance(elt1, elt2) \text{ au sein de la ligne } j \right)
+\right\}
+\end{align*}
+
+\[
+\forall sum_{k} \in EnsemblesSommes, sum_{0} = sum_{1} = ...
+\]
+
+Dans notre programme cette contrainte à été implémentée en suivant le pseudo-code\\suivant :
+\begin{verbatim}
+sommesDistances = {}
+pour elt1 dans Elements :
+    pour elt2 dans Elements :
+        sommeDistanceLigne = 0
+        pour toute ligne i du carre n*n :
+            sommeDistanceLigne += Distance(elt1, elt2)
+        sommeDistanceColonne = 0
+        pour toute colonne j du carre n*n :
+            sommeDistanceColonne += Distance(elt1, elt2)
+        nouvelleContrainte(sommeDistanceLigne = sommeDistanceColonne)
+        sommesDistances.ajouter(sommeDistanceLigne)
+nouvelleContrainte(sommesDistances.tousEgaux)
+\end{verbatim}
+
+\clearpage
+
+\section{Méthodes de résolution}
+
+\subsection{Méthode simple}
+
+\subsection{Méthode avancée}
+
+\clearpage
+
+\section{Résultats}
+
+\subsection{Méthode simple}
+
+\begin{table}[h]
+\centering
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} | c | c c c c c c | @{}}
+\hline
+& n=2 & n=3 & n=4 & n=5 & n=6 & n=7\\
+\hline
+Solution Found & Yes & Yes & No & Yes & Yes & ?\\
+Building time (in s) & 0,041 & 0,055 & 0,071 & 0,122 & 0,203 & ? \\
+Resolution Time (in s) & 0,022 & 0,033 & 0,518 & 0,228 & 39,315 & ? \\
+Nodes & 2  & 7 & 485 & 76 & 10944 & ? \\
+Nodes per second & 89,6 & 215 & 936,4 & 333,9 & 278,4 & ? \\
+Backtracks & 0 & 0 & 971 & 55 & 21671 & ? \\
+Backjumps & 0 & 0 & 0 & 0 & 0 & ? \\
+Fails & 0 & 0 & 486 & 29 & 10842 & ? \\
+Restarts & 0 & 0 & 0 & 0 & 0 & ? \\
+\hline
+\end{tabular*}
+\caption{Résultats d'exécutions de la méthode de résolution simple}
+\end{table}
+
+Après plus de 30 minutes, la méthode de résolution simple n'avait pas produit de résultats pour n=7
+
+\subsection{Méthode avancée}
+
+\clearpage
+
+\section{Conclusion}
 
 \end{document}
