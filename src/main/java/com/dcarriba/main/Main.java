@@ -9,13 +9,20 @@ import com.dcarriba.sbls.SimpleSpatiallyBalancedLatinSquare;
  * <p>
  * Usage using the CLI:
  * <p>
- * <code>./gradlew run --args='-n N -printSolution BOOLEAN'</code>
+ * <code>./gradlew run --args='-n N -method METHOD -printSolution BOOLEAN'</code>
  * <p>
- * with N the wanted value for n and BOOLEAN the boolean value whether the solution should be printed or not.
+ * with N the wanted value for n. <br>
+ * with METHOD the resolution method that will be used. METHOD is either simple for the simple resolution method or
+ * advanced for the advanced resolution method. <br>
+ * with BOOLEAN the boolean value whether the solution should be printed or not.
  * <p>
- * Example with n equals 6 and where the solution should be printed:
+ * Example with n equals 6, with the simple resolution method, and where the solution should be printed:
  * <p>
- * <code>./gradlew run --args='-n 6 -printSolution true'</code>
+ * <code>./gradlew run --args='-n 6 -method simple -printSolution true'</code>
+ * <p>
+ * Example with n equals 6, with the advanced resolution method, and where the solution should be printed:
+ * <p>
+ * <code>./gradlew run --args='-n 6 -method advanced -printSolution true'</code>
  */
 public class Main {
 
