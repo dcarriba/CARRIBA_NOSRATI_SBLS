@@ -48,15 +48,24 @@ To build the project, use the following command:
 To run the project, i.e. to solve the SBLS problem for n, use the following command:
 
 ```bash
-./gradlew run --args='-n <N> -printSolution <BOOLEAN>'
+./gradlew run --args='-n <N> -method <METHOD> -printSolution <BOOLEAN>'
 ```
 
-with `<N>` the wanted value for n and `<BOOLEAN>` the boolean value whether the solution should be printed or not.
+with:
+- `<N>` the wanted value for n.
+- `<METHOD>` the resolution method that will be used. `<METHOD>` is either `simple` for the simple resolution method or `advanced` for the advanced resolution method.
+- `<BOOLEAN>` the boolean value whether the solution should be printed or not.
 
-Example with n equals 6 and where the solution should be printed:
+Example with n equals 6, with the simple resolution method, and where the solution should be printed:
 
 ```bash
-./gradlew run --args='-n 6 -printSolution true'
+./gradlew run --args='-n 6 -method simple -printSolution true'
+```
+
+Example with n equals 6, with the advanced resolution method, and where the solution should be printed:
+
+```bash
+./gradlew run --args='-n 6 -method advanced -printSolution true'
 ```
 
 ### Run unit tests

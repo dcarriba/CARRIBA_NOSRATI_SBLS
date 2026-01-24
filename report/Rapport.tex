@@ -58,9 +58,9 @@ Le problème SBLS (ou Carré Latin Spatialement Équilibré) possède une contra
 
 \subsection{Présentation du projet}
 
-Dans ce projet, le problème SBLS à été modélisé avec la Programmation par Contraintes grâce à la librairie Java \href{https://choco-solver.org/}{Choco-solver}. Plusieurs méthodes de résolution différentes ont étés implémentées, qui seront comparé à une méthode dite "simple".
+Dans ce projet, le problème SBLS à été modélisé avec la Programmation par Contraintes grâce à la librairie Java \href{https://choco-solver.org/}{Choco-solver}. Deux méthodes de résolution différentes ont étés implémentées, une première dite "simple" ainsi qu'une seconde dite "avancée".
 
-Dans ce rapport on présentera la méthode dite "simple" ainsi que les autres méthodes de résolution qui ont étés implémentées dans notre programme. De plus on présentera pour tout \( n \) les différentes statistiques de résolution des différentes méthodes implémentées, comme le temps de résolution ou encore le nombre de noeuds utilisés.
+Dans ce rapport on présentera les deux méthodes de résolution qui ont étés implémentées dans notre programme. Ensuite on présentera pour tout \( n \) les différentes statistiques de résolution des différentes méthodes implémentées, comme le temps de résolution ou encore le nombre de noeuds utilisés. Finalement on va comparer les résultats des deux méthodes. 
 
 \subsection{Matériel utilisé}
 
@@ -205,27 +205,52 @@ nouvelleContrainte(sommesDistances.tousEgaux)
 
 \section{Méthodes de résolution}
 
+Dans ce projet nous avons implémentée deux méthodes de résolutions différentes.
+
 \subsection{Méthode simple}
 
+La première méthode de résolution est la méthode simple. La méthode simple à été implémentée par la classe \verb|SimpleSpatiallyBalancedLatinSquare| qui étend la classe abstraite\\\verb|SpatiallyBalancedLatinSquare|.
+
+La classe abstraite \verb|SpatiallyBalancedLatinSquare| contient la modélisation, avec les variables et les contraintes, du problème SBLS.
+
+Pour la résolution de problème, la méthode de résolution simple\\(\verb|SimpleSpatiallyBalancedLatinSquare|) ne précise pas de stratégie de recherche, et précise comme algorithme de filtrage pour les contraintes \verb|alldifferent| sur les lignes du carré \( n \times n \) et \verb|alldifferent| sur les colonnes du carré \( n \times n \) l'algorithme de filtrage par défaut (\verb|DEFAULT|). L'algorithme de filtrage par défaut utilisé par Choco-solver est un compromis entre \verb|BC| et \verb|AC_ZHANG|.
+
 \subsection{Méthode avancée}
+
+La seconde méthode de résolution est la méthode avancée. La méthode avancée à été implémentée par la classe \verb|AdvancedSpatiallyBalancedLatinSquare| qui étend la classe abstraite\\\verb|SpatiallyBalancedLatinSquare|.
+
+La classe abstraite \verb|SpatiallyBalancedLatinSquare| contient la modélisation, avec les variables et les contraintes, du problème SBLS.
+
+Pour la résolution de problème, la méthode de résolution avancée\\(\verb|AdvancedSpatiallyBalancedLatinSquare|) précise une stratégie de recherche, et précise comme algorithme de filtrage pour les contraintes \verb|alldifferent| sur les lignes du carré \( n \times n \) et \verb|alldifferent| sur les colonnes du carré \( n \times n \) l'algorithme de filtrage \verb|AC|. L'algorithme de filtrage \verb|AC| utilisé par Choco-solver est l'algorithme Arc-Consistency de Zhang, une amélioration de l'algorithme Arc-Consistency de Régin.
+
+La méthode de résolution avancée précise une stratégie de recherche. La stratégie de recherche utilisée par la méthode de résolution avancée est la stratégie \verb|domOverWDegSearch|.
+
+Cette stratégie de recherche sélectionne les variables selon le rapport entre la taille du domaine et le degré pondéré des contraintes. Cette stratégie s'adapte dynamiquement à la difficulté des contraintes pendant la recherche, ce qui permet une exploration plus efficace de l'espace de recherche pour des problèmes fortement contraints comme SBLS.
+
+En effet \verb|domOverWDegSearch| s'est avérée la plus efficace, après plusieurs essais avec différents autres stratégies de recherche. 
+
+De plus, la méthode avancée applique une contrainte pour casser la symétrie diagonale : \verb|variables[0][i] = variables[i][0]| pour tout \(i \in [0, n-1]\). Cette contrainte force l'égalité entre la première ligne et la première colonne du carré, réduisant significativement l'espace de recherche sans éliminer les solutions valides du problème SBLS.
 
 \clearpage
 
 \section{Résultats}
+\label{section_resultats}
 
 \subsection{Méthode simple}
+
+Après l'exécution de la méthode de résolution simple sur plusieurs \( n \) différents, on a obtenus les statistiques suivantes :
 
 \begin{table}[h]
 \centering
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} | c | c c c c c c | @{}}
 \hline
-& n=2 & n=3 & n=4 & n=5 & n=6 & n=7\\
+& \( n \)=2 & \( n \)=3 & \( n \)=4 & \( n \)=5 & \( n \)=6 & \( n \)=7\\
 \hline
 Solution Found & Yes & Yes & No & Yes & Yes & ?\\
-Building time (in s) & 0,041 & 0,055 & 0,071 & 0,122 & 0,203 & ? \\
-Resolution Time (in s) & 0,022 & 0,033 & 0,518 & 0,228 & 39,315 & ? \\
+Building time (in s) & 0,041 & 0,055 & 0,071 & 0,122 & 0,206 & ? \\
+Resolution Time (in s) & 0,022 & 0,033 & 0,518 & 0,228 & 41,653 & ? \\
 Nodes & 2  & 7 & 485 & 76 & 10944 & ? \\
-Nodes per second & 89,6 & 215 & 936,4 & 333,9 & 278,4 & ? \\
+Nodes per second & 89,6 & 215 & 936,4 & 333,9 & 262,7 & ? \\
 Backtracks & 0 & 0 & 971 & 55 & 21671 & ? \\
 Backjumps & 0 & 0 & 0 & 0 & 0 & ? \\
 Fails & 0 & 0 & 486 & 29 & 10842 & ? \\
@@ -233,14 +258,58 @@ Restarts & 0 & 0 & 0 & 0 & 0 & ? \\
 \hline
 \end{tabular*}
 \caption{Résultats d'exécutions de la méthode de résolution simple}
+\label{resultats_simple}
 \end{table}
 
-Après plus de 30 minutes, la méthode de résolution simple n'avait pas produit de résultats pour n=7
+Pour des valeurs de \( n \) supérieures où égales à 7, la méthode de résolution simple n'a pas produite de résultats, après plus de 30 minutes de temps passé. 
 
 \subsection{Méthode avancée}
+
+\begin{table}[h]
+\centering
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} | c | c c c c c c | @{}}
+\hline
+& \( n \)=2 & \( n \)=3 & \( n \)=4 & \( n \)=5 & \( n \)=6 & \( n \)=7\\
+\hline
+Solution Found & Yes & Yes & No & Yes & Yes & ?\\
+Building time (in s) & 0,047 & 0,059 & 0,079 & 0,129 & 0,207 & ? \\
+Resolution Time (in s) & 0,015 & 0,025 & 0,158 & 0,071 & 2,708 & ? \\
+Nodes & 2 & 3 & 72 & 9 & 1191 & ? \\
+Nodes per second & 137,7 & 122,0 & 456,0 & 127,1 & 439,8 & ? \\
+Backtracks & 0 & 0 & 145 & 0 & 2352 & ? \\
+Backjumps & 0 & 0 & 0 & 0 & 0 & ? \\
+Fails & 0 & 0 & 73 & 0 & 1180 & ? \\
+Restarts & 0 & 0 & 0 & 0 & 0 & ? \\
+\hline
+\end{tabular*}
+\caption{Résultats d'exécutions de la méthode de résolution avancée}
+\label{resultats_avancee}
+\end{table}
+
+Pour des valeurs de \( n \) supérieures où égales à 7, la méthode de résolution avancée n'a pas produite de résultats, après plus de 30 minutes de temps passé. 
+
+\subsection{Analyse des résultats}
+
+Comme on peut le voir sur \autoref{resultats_simple} et \autoref{resultats_avancee}, la méthode de résolution avancée est plus efficace que la méthode de résolution simple.
+
+En effet la méthode de résolution avancée résout en un temps de résolution inférieur ainsi que avec un nombre de n\oe uds et un nombre de fails et de backtracks inférieur, comparé à la méthode de résolution simple. 
+
+Par exemple, la méthode simple a trouvée pour \( n \)=6 une solution en environ 41 secondes, avec 10 944 n\oe uds, 10 842 fails et 21 671 backtracks. La méthode avancée a trouvée pour \( n \)=6 une solution en environ 2,7 secondes, avec 1 191 n\oe uds, 1 180 fails et 2352 backtracks, ce qui est considérablement inférieur à la méthode simple.
+
+Cependant, à partir de la valeur 7 pour \( n \), ni la méthode simple et ni la méthode avancée ne peuvent donner des résultats en un temps de résolution raisonnable. 
 
 \clearpage
 
 \section{Conclusion}
+
+Pour conclure, nous avons réussi à modéliser le problème SBLS (Spatially Balanced Latin Square) et nous avons réussi à le résoudre, pour certaines valeurs de \( n \), grâce à la librairie Java Choco-solver. 
+
+Pour résoudre le problème SBLS, nous avons implémenté deux méthodes de résolutions, une simple et une avancée. 
+
+Comparée à la méthode simple, la méthode de résolution avancée précise des algorithmes de filtrage pour les contraintes sur les lignes et les colonnes, utilise une stratégie de recherche, et casse la symétrie du carré \( n \times n\) avec une contrainte supplémentaire.  
+
+Ainsi, la méthode de résolution avancée est plus efficace que la méthode de résolution simple, comme on a pu voir dans la \autoref{section_resultats}.
+
+Cependant, ni la méthode simple et ni la méthode avancée ne peuvent donner des résultats pour des valeurs de \( n \) supérieures ou égales à 7, en un temps de résolution raisonnable.
 
 \end{document}

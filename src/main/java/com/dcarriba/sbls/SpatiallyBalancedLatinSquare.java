@@ -13,7 +13,7 @@ import java.util.List;
  * The {@link SpatiallyBalancedLatinSquare} class attempts to solve the problem of n*n Spatially Balanced Latin Square
  * for a given n.
  */
-public class SpatiallyBalancedLatinSquare {
+public abstract class SpatiallyBalancedLatinSquare {
     /** Size of the Spatially Balanced Latin Square */
     private final int n;
     /** If the solution (if found) should be printed */
@@ -33,7 +33,7 @@ public class SpatiallyBalancedLatinSquare {
     /**
      * Constructor of the {@link SpatiallyBalancedLatinSquare} class
      *
-     * @param n size of the Spatially Balanced Latin Square
+     * @param n             size of the Spatially Balanced Latin Square
      * @param printSolution if the solution (if found) should be printed
      */
     public SpatiallyBalancedLatinSquare(int n, boolean printSolution) {
@@ -43,36 +43,78 @@ public class SpatiallyBalancedLatinSquare {
     }
 
     /**
+     * @return Size of the Spatially Balanced Latin Square
+     */
+    public int getN() {
+        return n;
+    }
+
+    /**
+     * @return {@link Model} of the problem
+     */
+    public Model getModel() {
+        return model;
+    }
+
+    /**
+     * @param model {@link Model} of the problem
+     */
+    protected void setModel(Model model) {
+        this.model = model;
+    }
+
+    /**
+     * @return Variables of the problem
+     */
+    public IntVar[][] getVariables() {
+        return variables;
+    }
+
+    /**
+     * @param variables Variables of the problem
+     */
+    protected void setVariables(IntVar[][] variables) {
+        this.variables = variables;
+    }
+
+    /**
+     * @return {@link Solver} of the {@link Model} of the problem
+     */
+    public Solver getSolver() {
+        return solver;
+    }
+
+    /**
+     * @param solver {@link Solver} of the {@link Model} of the problem
+     */
+    protected void setSolver(Solver solver) {
+        this.solver = solver;
+    }
+
+    /**
      * Instantiates the Spatially Balanced Latin Square Problem
      */
-    private void instantiateProblem() {
-        model = new Model(n + "*" + n + " Spatially Balanced Latin Square");
-        variables = model.intVarMatrix(n, n, 0, n-1);
-
-        postLineAllDiffConstraint();
-        postColumnAllDiffConstraint();
-        postSpatiallyBalancedConstraint();
-
-        solver = model.getSolver();
-
-        System.out.println(model.getName() + " problem has been instantiated.\n");
-    }
+    protected abstract void instantiateProblem();
 
     /**
      * Posts the following constraint to the model: <p>
      * for all lines, all values inside a line must be different from another
+     *
+     * @param Consistency consistency level, among {"BC", "AC_REGIN", "AC", "AC_ZHANG", "DEFAULT"}
      */
-    private void postLineAllDiffConstraint() {
+    protected void postLineAllDiffConstraint(String Consistency) {
         for (int i = 0; i < n; i++) {
-            model.allDifferent(variables[i]).post();
+            model.allDifferent(variables[i], Consistency).post();
         }
     }
 
     /**
      * Posts the following constraint to the model: <p>
      * for all columns, all values inside a column must be different from another
+     *
+     * @param Consistency consistency level, among {"BC", "AC_REGIN", "AC", "AC_ZHANG", "DEFAULT"}
      */
-    private void postColumnAllDiffConstraint() {
+    protected void postColumnAllDiffConstraint(String Consistency) {
         for (int j = 0; j < n; j++) {
             IntVar[] column = new IntVar[n];
 
@@ -80,7 +122,7 @@ public class SpatiallyBalancedLatinSquare {
                 column[i] = variables[i][j];
             }
 
-            model.allDifferent(column).post();
+            model.allDifferent(column, Consistency).post();
         }
     }
 
@@ -89,14 +131,14 @@ public class SpatiallyBalancedLatinSquare {
      * For all value pairs (elt1, elt2) inside the n*n square: the sum of their distances inside all lines is equal.
      * Same for the sum of the distances inside all columns.
      */
-    private void postSpatiallyBalancedConstraint() {
+    protected void postSpatiallyBalancedConstraint() {
         // All sum of distances of all pairs (elt1, elt2)
         List<IntVar> allDistanceSums = new ArrayList<>();
 
         for (int elt1 = 0; elt1 < n; elt1++) {
             for (int elt2 = 0; elt2 < n; elt2++) {
                 if (elt1 == elt2) continue;
-                
+
                 // Maximum possible distance sum for a pair
                 int maxDistanceSum = n * n * (n - 1);
 
@@ -105,17 +147,17 @@ public class SpatiallyBalancedLatinSquare {
 
                 List<IntVar> lineContributionsList = new ArrayList<>();
                 int lineContributionIndex = 0;
-                
+
                 for (int i = 0; i < n; i++) {
                     for (int j1 = 0; j1 < n; j1++) {
                         for (int j2 = 0; j2 < n; j2++) {
                             int distance = Math.abs(j1 - j2);
-                            
+
                             BoolVar isElt1AtJ1 = model.boolVar("line_elt1_" + elt1 + "_at_" + i + "_" + j1 + "_"
                                     + lineContributionIndex);
                             BoolVar isElt2AtJ2 = model.boolVar("line_elt2_" + elt2 + "_at_" + i + "_" + j2 + "_"
                                     + lineContributionIndex);
-                            
+
                             model.reifyXeqC(variables[i][j1], elt1, isElt1AtJ1);
                             model.reifyXeqC(variables[i][j2], elt2, isElt2AtJ2);
                             

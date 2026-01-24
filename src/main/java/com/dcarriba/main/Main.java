@@ -1,6 +1,7 @@
 package com.dcarriba.main;
 
-import com.dcarriba.sbls.SpatiallyBalancedLatinSquare;
+import com.dcarriba.sbls.AdvancedSpatiallyBalancedLatinSquare;
+import com.dcarriba.sbls.SimpleSpatiallyBalancedLatinSquare;
 
 /**
  * {@link Main} class of the program to solve the SBLS problem.
@@ -25,19 +26,26 @@ public class Main {
      */
     public static void main(String[] args) {
         int n = getArgumentN(args);
+        String method = getArgumentMethod(args);
         boolean printSolution = getArgumentPrintSolution(args);
 
         System.out.println("Spatially Balanced Latin Square");
-        System.out.println("\nArguments:\nn = " + n + "\nprintSolution = " + printSolution + "\n");
+        System.out.println("\nArguments:\nn = " + n + "\nmethod = " + method + "\nprintSolution = " + printSolution + "\n");
 
-        new SpatiallyBalancedLatinSquare(n, printSolution).solveProblem();
+        if (method.equals("simple")) {
+            new SimpleSpatiallyBalancedLatinSquare(n, printSolution).solveProblem();
+        } else if (method.equals("advanced")) {
+            new AdvancedSpatiallyBalancedLatinSquare(n, printSolution).solveProblem();
+        } else {
+            throw new IllegalArgumentException("Unknown method: " + method);
+        }
     }
 
     /**
      * Extracts the value for n from the given arguments
      *
      * @param args Arguments given to the program
-     * @return value for n
+     * @return     value for n
      */
     private static int getArgumentN(String[] args) {
         for (int i = 0; i < args.length; i++) {
@@ -61,7 +69,7 @@ public class Main {
      * Extracts the value for printSolution from the given arguments
      *
      * @param args Arguments given to the program
-     * @return value for printSolution
+     * @return     value for printSolution
      */
     private static boolean getArgumentPrintSolution(String[] args) {
          for (int i = 0; i < args.length; i++) {
@@ -75,5 +83,34 @@ public class Main {
         }
 
         return false;
+    }
+
+    /**
+     * Extracts the value for method from the given arguments
+     * 
+     * @param args Arguments given to the program
+     * @return     value for method
+     */
+    private static String getArgumentMethod(String[] args) {
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("-method")) {
+                if (i + 1 < args.length) {
+                    try {
+                        String method = args[i + 1].toLowerCase();
+                        if (method.equals("simple") || method.equals("advanced")) {
+                            return method;
+                        } else {
+                            throw new IllegalArgumentException("Invalid method. Use simple or advanced.");
+                        }
+                    } catch (Exception e) {
+                        throw new IllegalArgumentException("Invalid value for method. Use simple or advanced.");
+                    }
+                } else {
+                    throw new IllegalArgumentException("Missing value for -method.");
+                }
+            }
+        }
+
+        return "simple";
     }
 }
