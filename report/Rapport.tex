@@ -112,7 +112,7 @@ avec
 \[
 D_{i, j} = \{0, \dots , n-1\}, \forall i \in [0, n-1], \forall j \in [0, n-1]
 \]
-où \( D_{i, j} \) est le domaine de la variable \( v_{i, j} \), \( \forall i \in [0, n-1], \forall elt \in [0, n-1] \)
+où \( D_{i, j} \) est le domaine de la variable \( v_{i, j} \), \( \forall i \in [0, n-1], \forall j \in [0, n-1] \)
 \\ \par
 
 Cela signifie que toute cellule \( (i, j) \) du carré \( n \times n \) peut prendre pour valeur entre \(0\) et \(n-1\).
@@ -123,7 +123,7 @@ Cela signifie que toute cellule \( (i, j) \) du carré \( n \times n \) peut pre
 
 La première contrainte du problème SBLS proscrit que il y a exactement une seule occurence de chaque élément \( elt \) au sein d'une ligne \( i \) du carré \(n \times n \) \( \forall i \in [0, n-1] \).
 
-Dans notre modélisation, la variable \(v_{i, j}\) représente la valeur de la cellule \( (i, j) \) du carré \( n \times n \).
+Dans notre modélisation, la variable \(v_{i, j}\) représente la valeur (i.e. l'élément) de la cellule \( (i, j) \) du carré \( n \times n \).
 
 Ainsi, cette première contrainte est mathématiquement défini de la manière suivante :
 
@@ -143,7 +143,7 @@ for (int i = 0; i < n; i++) {
 
 La seconde contrainte du problème SBLS proscrit que il y a exactement une seule occurence de chaque élément \( elt \) au sein d'une colonne \( j \) du carré \(n \times n \) \( \forall j \in [0, n-1] \).
 
-Dans notre modélisation, la variable \(v_{i, j}\) représente la valeur de la cellule \( (i, j) \) du carré \( n \times n \).
+Dans notre modélisation, la variable \(v_{i, j}\) représente la valeur (i.e. l'élément) de la cellule \( (i, j) \) du carré \( n \times n \).
 
 Ainsi, cette seconde contrainte est mathématiquement défini de la manière suivante :
 
